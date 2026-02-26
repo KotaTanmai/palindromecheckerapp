@@ -1,38 +1,82 @@
-import java.util.Deque;
-import java.util.ArrayDeque;
+import java.util.*;
 
 public class PalindromeCheckerApp {
 
+    // ================= UC8: Linked List Node =================
+    static class Node {
+        char data;
+        Node next;
+
+        Node(char data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    // ================= UC8: Linked List Palindrome =================
+    public static boolean isLinkedListPalindrome(String input) {
+
+        if (input == null || input.length() == 0)
+            return true;
+
+        // Convert String to Linked List
+        Node head = new Node(input.charAt(0));
+        Node current = head;
+
+        for (int i = 1; i < input.length(); i++) {
+            current.next = new Node(input.charAt(i));
+            current = current.next;
+        }
+
+        // Find middle using Fast & Slow pointer
+        Node slow = head;
+        Node fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        // Reverse second half
+        Node prev = null;
+        Node next = null;
+
+        while (slow != null) {
+            next = slow.next;
+            slow.next = prev;
+            prev = slow;
+            slow = next;
+        }
+
+        // Compare both halves
+        Node firstHalf = head;
+        Node secondHalf = prev;
+
+        while (secondHalf != null) {
+            if (firstHalf.data != secondHalf.data)
+                return false;
+
+            firstHalf = firstHalf.next;
+            secondHalf = secondHalf.next;
+        }
+
+        return true;
+    }
+
+    // ================= MAIN METHOD =================
     public static void main(String[] args) {
 
-        String word = "madam";
+        Scanner scanner = new Scanner(System.in);
 
-        // Create Deque
-        Deque<Character> deque = new ArrayDeque<>();
+        System.out.println("Enter a string:");
+        String input = scanner.nextLine();
 
-        // Insert characters into deque
-        for (int i = 0; i < word.length(); i++) {
-            deque.addLast(word.charAt(i));
-        }
-
-        boolean isPalindrome = true;
-
-        // Compare front and rear
-        while (deque.size() > 1) {
-
-            char front = deque.removeFirst();
-            char rear = deque.removeLast();
-
-            if (front != rear) {
-                isPalindrome = false;
-                break;
-            }
-        }
-
-        if (isPalindrome) {
-            System.out.println(word + " is a Palindrome.");
+        if (isLinkedListPalindrome(input)) {
+            System.out.println(input + " is a Palindrome (Linked List Method)");
         } else {
-            System.out.println(word + " is NOT a Palindrome.");
+            System.out.println(input + " is NOT a Palindrome (Linked List Method)");
         }
+
+        scanner.close();
     }
 }
