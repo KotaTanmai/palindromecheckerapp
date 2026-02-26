@@ -1,82 +1,64 @@
-import java.util.Scanner;
+// File: PalindromeCheckerApp.java
+import java.util.*;
 
 public class PalindromeCheckerApp {
 
-    // ================= UC8: Linked List Node =================
-    static class Node {
-        char data;
-        Node next;
-
-        Node(char data) {
-            this.data = data;
-            this.next = null;
-        }
-    }
-
-    // ================= UC8: Linked List Palindrome Check =================
-    public static boolean isLinkedListPalindrome(String input) {
-
-        if (input == null || input.length() == 0)
-            return true;
-
-        // Convert String to Linked List
-        Node head = new Node(input.charAt(0));
-        Node current = head;
-
-        for (int i = 1; i < input.length(); i++) {
-            current.next = new Node(input.charAt(i));
-            current = current.next;
-        }
-
-        // Find middle using Fast & Slow pointer
-        Node slow = head;
-        Node fast = head;
-
-        while (fast != null && fast.next != null) {
-            slow = slow.next;
-            fast = fast.next.next;
-        }
-
-        // Reverse second half
-        Node prev = null;
-        Node next;
-
-        while (slow != null) {
-            next = slow.next;
-            slow.next = prev;
-            prev = slow;
-            slow = next;
-        }
-
-        // Compare both halves
-        Node firstHalf = head;
-        Node secondHalf = prev;
-
-        while (secondHalf != null) {
-            if (firstHalf.data != secondHalf.data)
+    // UC2: Hardcoded / simple string palindrome
+    public static boolean isSimplePalindrome(String input) {
+        int start = 0;
+        int end = input.length() - 1;
+        while (start < end) {
+            if (input.charAt(start) != input.charAt(end)) {
                 return false;
-
-            firstHalf = firstHalf.next;
-            secondHalf = secondHalf.next;
+            }
+            start++;
+            end--;
         }
-
         return true;
     }
 
-    // ================= MAIN METHOD =================
-    public static void main(String[] args) {
+    // UC9/10: Recursive palindrome check (ignores spaces & case)
+    public static boolean isRecursivePalindrome(String input, int start, int end) {
+        if (start >= end) return true;
+        if (input.charAt(start) != input.charAt(end)) return false;
+        return isRecursivePalindrome(input, start + 1, end - 1);
+    }
 
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Enter a string:");
-        String input = scanner.nextLine();
-
-        if (isLinkedListPalindrome(input)) {
-            System.out.println(input + " is a Palindrome (Linked List Method)");
-        } else {
-            System.out.println(input + " is NOT a Palindrome (Linked List Method)");
+    // UC11: Object-oriented palindrome service
+    static class PalindromeChecker {
+        private String text;
+        public PalindromeChecker(String text) { this.text = text; }
+        public boolean checkPalindrome() {
+            String normalized = text.replaceAll("\\s+", "").toLowerCase();
+            int start = 0, end = normalized.length() - 1;
+            while (start < end) {
+                if (normalized.charAt(start) != normalized.charAt(end)) return false;
+                start++;
+                end--;
+            }
+            return true;
         }
+    }
 
-        scanner.close();
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter a string to check palindrome:");
+        String input = sc.nextLine();
+
+        // Example 1: Simple check
+        System.out.println("Simple palindrome check:");
+        System.out.println(isSimplePalindrome(input) ? "Palindrome!" : "Not a palindrome.");
+
+        // Example 2: Recursive & normalized check
+        String normalized = input.replaceAll("\\s+", "").toLowerCase();
+        System.out.println("Recursive (case & space ignored) check:");
+        System.out.println(isRecursivePalindrome(normalized, 0, normalized.length() - 1) ? "Palindrome!" : "Not a palindrome.");
+
+        // Example 3: Using Object-Oriented PalindromeChecker
+        PalindromeChecker checker = new PalindromeChecker(input);
+        System.out.println("Object-Oriented check:");
+        System.out.println(checker.checkPalindrome() ? "Palindrome!" : "Not a palindrome.");
+
+        sc.close();
     }
 }
