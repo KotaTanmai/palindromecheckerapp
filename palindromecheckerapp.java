@@ -1,4 +1,4 @@
-import java.util.*;
+import java.util.Scanner;
 
 public class PalindromeCheckerApp {
 
@@ -13,7 +13,7 @@ public class PalindromeCheckerApp {
         }
     }
 
-    // ================= UC8: Linked List Palindrome =================
+    // ================= UC8: Linked List Palindrome Check =================
     public static boolean isLinkedListPalindrome(String input) {
 
         if (input == null || input.length() == 0)
@@ -39,7 +39,7 @@ public class PalindromeCheckerApp {
 
         // Reverse second half
         Node prev = null;
-        Node next = null;
+        Node next;
 
         while (slow != null) {
             next = slow.next;
