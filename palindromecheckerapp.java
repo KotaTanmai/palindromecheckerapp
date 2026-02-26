@@ -1,82 +1,42 @@
+
+// File: UseCase10PalindromeCheckerApp.java
 import java.util.Scanner;
 
 public class PalindromeCheckerApp {
 
-    // ================= UC8: Linked List Node =================
-    static class Node {
-        char data;
-        Node next;
+    // Method to check palindrome
+    public static boolean isPalindrome(String str) {
+        int start = 0;
+        int end = str.length() - 1;
 
-        Node(char data) {
-            this.data = data;
-            this.next = null;
-        }
-    }
-
-    // ================= UC8: Linked List Palindrome Check =================
-    public static boolean isLinkedListPalindrome(String input) {
-
-        if (input == null || input.length() == 0)
-            return true;
-
-        // Convert String to Linked List
-        Node head = new Node(input.charAt(0));
-        Node current = head;
-
-        for (int i = 1; i < input.length(); i++) {
-            current.next = new Node(input.charAt(i));
-            current = current.next;
-        }
-
-        // Find middle using Fast & Slow pointer
-        Node slow = head;
-        Node fast = head;
-
-        while (fast != null && fast.next != null) {
-            slow = slow.next;
-            fast = fast.next.next;
-        }
-
-        // Reverse second half
-        Node prev = null;
-        Node next;
-
-        while (slow != null) {
-            next = slow.next;
-            slow.next = prev;
-            prev = slow;
-            slow = next;
-        }
-
-        // Compare both halves
-        Node firstHalf = head;
-        Node secondHalf = prev;
-
-        while (secondHalf != null) {
-            if (firstHalf.data != secondHalf.data)
+        while (start < end) {
+            if (str.charAt(start) != str.charAt(end)) {
                 return false;
-
-            firstHalf = firstHalf.next;
-            secondHalf = secondHalf.next;
+            }
+            start++;
+            end--;
         }
-
         return true;
     }
 
-    // ================= MAIN METHOD =================
     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
 
-        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter a string to check if it is a palindrome (ignores spaces & case):");
+        String input = sc.nextLine();
 
-        System.out.println("Enter a string:");
-        String input = scanner.nextLine();
+        // Normalize string: remove spaces & convert to lowercase
+        String normalized = input.replaceAll("\\s+", "").toLowerCase();
 
-        if (isLinkedListPalindrome(input)) {
-            System.out.println(input + " is a Palindrome (Linked List Method)");
+        // Check palindrome
+        boolean result = isPalindrome(normalized);
+
+        if (result) {
+            System.out.println("The string is a palindrome!");
         } else {
-            System.out.println(input + " is NOT a Palindrome (Linked List Method)");
+            System.out.println("The string is NOT a palindrome.");
         }
 
-        scanner.close();
+        sc.close();
     }
 }
